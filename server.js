@@ -7,10 +7,6 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-const listener = app.listen(3000, () => {
-  console.log("Server running on port " + listener.address().port);
-});
-
 app.get("/api", (req, res) => {
   const current = new Date();
 
@@ -25,23 +21,26 @@ app.get("/api/:date", (req, res) => {
 
   let d;
 
-  // Check if it's a Unix timestamp (only digits)
   if (/^\d+$/.test(date)) {
     d = new Date(Number(date));
   } else {
     d = new Date(date);
   }
 
-  // Invalid date
   if (d.toString() === "Invalid Date") {
     return res.json({
-      error: "Invalid Date"
+      error: "Invalid Date",
     });
   }
 
-  // Valid date
   res.json({
     unix: d.getTime(),
-    utc: d.toUTCString()
+    utc: d.toUTCString(),
   });
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
